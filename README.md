@@ -3,6 +3,9 @@
 
 ## 数据结构
 * 栈(Stack)
-* 栈(Stack)
-* 栈(Stack)
-* 栈(Stack)
+* 队列(Queue)
+* 链表(linkList)
+* 集合
+* 字典
+* 散列表
+* 树(BST)
