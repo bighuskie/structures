@@ -172,65 +172,10 @@ function hotPotato(queueList, num) {
   return queue.dequeue();
 }
 
-/**
- * 4、集合数据结构实现(Set)
- */
-function MySet() {
-  let item = {};
-  /**
-   * 判断值是否在集合中，在就返回true，不在就返回false
-   */
-  this.has = function(key) {
-    return item.hasOwnProperty(key);
-  };
-  /**
-   * 向集合添加一个值
-   * parameter:key
-   * return:boolean
-   */
-  this.add = function(key) {
-    if (!this.has(key)) {
-      item[key] = key;
-      return true;
-    }
-    return false;
-  };
-  /**
-   * 向集合删除指定值
-   * parameter:key
-   * return:boolean
-   */
-  this.remove = function(key) {
-    if (this.has(key)) {
-      delete item[key];
-      return true;
-    }
-    return false;
-  };
-  /**
-   * 移除集合中所有值
-   */
-  this.clear = function() {
-    item = {};
-  };
-  /**
-   * 返回集合中元素的数量
-   * return: number
-   */
-  this.size = function() {
-    return Object.keys(item).length;
-  };
-  /**
-   * 返回集合中所有元素
-   * return: element
-   */
-  this.values = function() {
-    return Object.keys(item);
-  };
-}
+
 
 /**
- * 3、链表结构实现
+ * 3.1、链表结构实现
  */
 function linkList() {
   let head = null;
@@ -314,18 +259,187 @@ function linkList() {
     }
     return false;
   };
+  /**
+   * 返回元素值的位置
+   * parameter:key
+   * return:number
+   */
+  this.indexOf = function(element) {
+    let index = 0;
+    let current = head;
+    while (current) {
+      if (current.element === element) {
+        return index;
+      }
+      current = current.next;
+      index++;
+    }
+    return -1;
+  };
+  /**
+   * 根据element删除元素
+   * parameter:number
+   * return:boolean
+   */
+  this.remove = function(element) {
+    let index = this.indexOf(element);
+    return this.removeAt(index);
+  };
 }
-let link = new linkList();
-console.log(link.getHead());
-link.append("daha");
-link.append("js");
-link.append("h5");
-link.insert(2, "css");
-console.log(link.removeAt(3));
-console.log(link.getHead());
+/**
+ * 3.2、双向链表结构实现
+ */
+function DoubleLinkList() {
+  let Node = function(element) {
+    this.element = element;
+    this.prev = null;
+    this.next = null;
+  };
+  let head = null;
+  let tail = null;
+  let length = 0;
+  /**
+   * 从任意位置插入元素
+   */
+  this.insert = function(position, element) {
+    if (position > -1 && position <= length) {
+      let node = new Node(element);
+      let current = head;
+      let previous,
+        index = 0;
+      if (position === 0) {
+        if (!head) {
+          head = node;
+          tail = node;
+        } else {
+          node.next = current;
+          current.prev = node;
+          head = node;
+        }
+      } else if (position === length) {
+        current = tail;
+        current.next = node;
+        node.prev = current;
+        tail = node;
+      } else {
+        while (index < position) {
+          previous = current;
+          current = current.next;
+          index++;
+        }
+        previous.next = node;
+        node.next = current;
+        node.prev = previous;
+        current.prev = node;
+      }
+      length++;
+      return true;
+    }
+    return false;
+  };
+  /**
+   * 返回head
+   * return:object
+   */
+  this.getHead = function() {
+    return head;
+  };
+  /**
+   * 从任意位置移除
+   * parameter:number
+   * return:boolean
+   */
+  this.removeAt = function(position) {
+    if (position > -1 && position < length) {
+      let current = head;
+      let previous,
+        index = 0;
+      if (position === 0) {
+        head = current.next;
+        if (length === 1) {
+          head = null;
+        } else {
+          head.prev = null;
+        }
+      } else if (position === length - 1) {
+        current = tail;
+        tail = current.prev;
+        tail.next = null;
+      } else {
+        while (index < position) {
+          previous = current;
+          current = current.next;
+          index++;
+        }
+        previous.next = current.next;
+        current.next.prev = previous;
+      }
+      length--;
+      return true;
+    }
+    return false;
+  };
+}
 
 /**
- * 4、字典数据结构实现(Map)
+ * 4、集合数据结构实现(Set)
+ */
+function MySet() {
+  let item = {};
+  /**
+   * 判断值是否在集合中，在就返回true，不在就返回false
+   */
+  this.has = function(key) {
+    return item.hasOwnProperty(key);
+  };
+  /**
+   * 向集合添加一个值
+   * parameter:key
+   * return:boolean
+   */
+  this.add = function(key) {
+    if (!this.has(key)) {
+      item[key] = key;
+      return true;
+    }
+    return false;
+  };
+  /**
+   * 向集合删除指定值
+   * parameter:key
+   * return:boolean
+   */
+  this.remove = function(key) {
+    if (this.has(key)) {
+      delete item[key];
+      return true;
+    }
+    return false;
+  };
+  /**
+   * 移除集合中所有值
+   */
+  this.clear = function() {
+    item = {};
+  };
+  /**
+   * 返回集合中元素的数量
+   * return: number
+   */
+  this.size = function() {
+    return Object.keys(item).length;
+  };
+  /**
+   * 返回集合中所有元素
+   * return: element
+   */
+  this.values = function() {
+    return Object.keys(item);
+  };
+}
+
+/**
+ * 5、字典数据结构实现(Map)
  */
 function MyMap() {
   let item = {};
@@ -388,6 +502,11 @@ function MyMap() {
     return temp;
   };
 }
+
+/**
+ * 6、散列表的数据结构实现
+ */
+
 
 /**
  * 8、二叉搜索树(BST)数据结构实现
