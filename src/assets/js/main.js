@@ -172,8 +172,6 @@ function hotPotato(queueList, num) {
   return queue.dequeue();
 }
 
-
-
 /**
  * 3.1、链表结构实现
  */
@@ -284,6 +282,13 @@ function linkList() {
   this.remove = function(element) {
     let index = this.indexOf(element);
     return this.removeAt(index);
+  };
+  /**
+   * 判断链表是否为空
+   * return:void
+   */
+  this.isEmpty = function() {
+    return length === 0;
   };
 }
 /**
@@ -504,12 +509,235 @@ function MyMap() {
 }
 
 /**
- * 6、散列表的数据结构实现
+ * 6.1、散列表的数据结构实现
  */
-
+function HashTable() {
+  /**
+   * 辅助函数,根据key生成数值
+   * parameter:key
+   * return:String
+   */
+  let key2hash = function(key) {
+    let hash = "";
+    for (let i = 0; i < key.length; i++) {
+      hash += key.charCodeAt(i);
+    }
+    return hash % 37;
+  };
+  let table = [];
+  /**
+   * 向散列表增加一个新的项
+   * parameter:key,value
+   * return:Boolean
+   */
+  this.put = function(key, value) {
+    let position = key2hash(key);
+    table[position] = value;
+  };
+  /**
+   * 根据键值从散列表中移除项
+   * parameter:key
+   */
+  this.remove = function(key) {
+    let position = key2hash(key);
+    table[position] = undefined;
+  };
+  /**
+   * 根据键值从散列表中返回对应值
+   * parameter:key
+   * return:any
+   */
+  this.get = function(key) {
+    let position = key2hash(key);
+    return table[position];
+  };
+  /**
+   * 返回散列表值
+   * return:Array
+   */
+  this.getTable = function() {
+    return table;
+  };
+}
 
 /**
- * 8、二叉搜索树(BST)数据结构实现
+ * 6.2、散列表的分离链接法的数据结构实现
+ */
+function TableLink() {
+  /**
+   * 辅助函数,根据key生成数值
+   * parameter:key
+   * return:String
+   */
+  let key2hash = function(key) {
+    let hash = "";
+    for (let i = 0; i < key.length; i++) {
+      hash += key.charCodeAt(i);
+    }
+    return hash % 37;
+  };
+  let table = [];
+  /**
+   * 辅助函数，用来产生链表的元素
+   */
+  let Valuepair = function(key, value) {
+    this.key = key;
+    this.value = value;
+  };
+  /**
+   * 向散列表增加一个新的项
+   * parameter:key,element
+   * return:Boolean
+   */
+  this.put = function(key, value) {
+    let position = key2hash(key);
+    if (table[position] === undefined) {
+      table[position] = new linkList();
+    }
+    table[position].append(new Valuepair(key, value));
+  };
+  /**
+   * 根据键值从散列表中返回对应值
+   * parameter:key
+   * return:any
+   */
+  this.get = function(key) {
+    let position = key2hash(key);
+    if (table[position] !== undefined) {
+      let current = table[position].getHead();
+      while (current) {
+        if (current.element.key === key) {
+          return current.element.value;
+        }
+        current = current.next;
+      }
+    }
+    return undefined;
+  };
+  /**
+   * 根据键值从散列表中移除项
+   * parameter:key
+   * return:Boolean
+   */
+  this.remove = function(key) {
+    let position = key2hash(key);
+    if (table[position] !== undefined) {
+      let current = table[position].getHead();
+      while (current) {
+        if (current.element.key === key) {
+          table[position].remove(current.element);
+          if (table[position].isEmpty()) {
+            table[position] = undefined;
+          }
+          return true;
+        }
+        current = current.next;
+      }
+    }
+    return false;
+  };
+  /**
+   * 返回散列表值
+   * return:Array
+   */
+  this.getTable = function() {
+    return table;
+  };
+}
+
+/**
+ * 6.2、散列表的线性探查法的数据结构实现
+ */
+function TableLinear() {
+  /**
+   * 辅助函数,根据key生成数值
+   * parameter:key
+   * return:String
+   */
+  let key2hash = function(key) {
+    let hash = "";
+    for (let i = 0; i < key.length; i++) {
+      hash += key.charCodeAt(i);
+    }
+    return hash % 37;
+  };
+  let table = [];
+  /**
+   * 辅助函数，用来产生链表的元素
+   */
+  let Valuepair = function(key, value) {
+    this.key = key;
+    this.value = value;
+  };
+  /**
+   * 向散列表增加一个新的项
+   * parameter:key,element
+   * return:Boolean
+   */
+  this.put = function(key, value) {
+    let position = key2hash(key);
+    let index;
+    if (table[position] === undefined) {
+      table[position] = new Valuepair(key, value);
+    } else {
+      index = position + 1;
+      while (table[index] !== undefined) {
+        index++;
+      }
+      table[index] = new Valuepair(key, value);
+    }
+  };
+  /**
+   * 根据键值从散列表中返回对应值
+   * parameter:key
+   * return:any
+   */
+  this.get = function(key) {
+    let position = key2hash(key);
+    if (table[position] !== undefined) {
+      if (table[position].key === key) {
+        return table[position].value;
+      } else {
+        let index = position + 1;
+        while (table[index].key !== key || table[index] === undefined) {
+          index++;
+        }
+        return table[index].value;
+      }
+    }
+    return undefined;
+  };
+  /**
+   * 根据键值从散列表中移除项
+   * parameter:key
+   * return:Boolean
+   */
+  this.remove = function(key) {
+    let position = key2hash(key);
+    if (table[position] !== undefined) {
+      if (table[position].key === key) {
+        table[position] = undefined;
+      } else {
+        let index = position + 1;
+        while (table[index].key !== key || table[index] === undefined) {
+          index++;
+        }
+        table[index] = undefined;
+      }
+    }
+    return undefined;
+  };
+  /**
+   * 返回散列表值
+   * return:Array
+   */
+  this.getTable = function() {
+    return table;
+  };
+}
+
+/**
+ * 7、二叉搜索树(BST)数据结构实现
  */
 function BinarySearchTree() {
   let Node = function(key) {
