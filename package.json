@@ -1,15 +1,17 @@
 {
-  "name": "webpack4",
+  "name": "structures",
   "version": "1.0.0",
-  "description": "",
+  "description": "\"Javascript数据结构与算法\"",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "serve": "webpack-dev-server"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "\"Javascript数据结构与算法\""
+  ],
+  "author": "B.Huskie",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.2.2",
